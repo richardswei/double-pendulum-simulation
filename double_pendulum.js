@@ -5,15 +5,15 @@
 	*/
 var simulationOn = false;
 // CONSTANTS
-var m1 = 10; // mass1
-var m2 = 10;	// mass2
-var g = 10; // gravitational constant
-var timeStep = 10;
+var m1 = 100; // mass1
+var m2 = 100;	// mass2
+var timeStep = 100;
+var g = 9.8/timeStep; // gravitational constant
 
 // POSITIONS
 var r1 = 100;	// length of the pendulum
 var r2 = 100;	// length of the pendulum
-var theta1 = Math.PI/4; // initial angular pos (in rads) of the pendulum relative to lower vertical 
+var theta1 = 0; // initial angular pos (in rads) of the pendulum relative to lower vertical 
 var theta2 = Math.PI/2;
 var x1 = r1*Math.sin(theta1);
 var y1 = r1*Math.cos(theta1);
@@ -69,14 +69,20 @@ var lines = svgContainer.append("path")
 // NEXT STEPS
 function step() {
   circlesData = circles.data();
-	d_theta1 += getAngularAcc1(g, m1, m2, circlesData[0].theta, circlesData[1].theta, d_theta1, d_theta2);
-	d_theta2 += getAngularAcc2(g, m1, m2, circlesData[0].theta, circlesData[1].theta, d_theta1, d_theta2);
+  var prev_d_theta1 = d_theta1;
+  var prev_d_theta2 = d_theta2;
+	d_theta1 += getAngularAcc1(g, m1, m2, circlesData[0].theta, circlesData[1].theta, prev_d_theta1, prev_d_theta2);
+	d_theta2 += getAngularAcc2(g, m1, m2, circlesData[0].theta, circlesData[1].theta, prev_d_theta1, prev_d_theta2);
+	
+	console.log('d_theta1 : '+d_theta1);
+	console.log('prev_d_theta1 : '+prev_d_theta1);
+
+	circlesData[0].theta += d_theta1;
+	circlesData[1].theta += d_theta2;
 
 	// calculate acceleration and velocities
-  circlesData[0].theta += d_theta1;
   circlesData[0].x_axis = r1*Math.sin(circlesData[0].theta);
   circlesData[0].y_axis = r1*Math.cos(circlesData[0].theta);
-  circlesData[1].theta += d_theta2;
   circlesData[1].x_axis = circlesData[0].x_axis +
   	r2*Math.sin(circlesData[1].theta);
   circlesData[1].y_axis = circlesData[0].y_axis +
@@ -112,29 +118,28 @@ var startSimulation = setInterval(function(){
 		step();
 	}, 1000/timeStep);
 
-// function toggleSimulation() {
-// 	if (simulationOn) {
-// 		clearInterval(startSimulation);
-// 		simulationOn = false;
-// 	} else {
-// 		startSimulation;
-// 		simulationOn=true;
-// 	}
-// }
+function toggleSimulation() {
+	if (simulationOn) {
+		clearInterval(startSimulation);
+		simulationOn = false;
+	} else {
+		startSimulation;
+		simulationOn=true;
+	}
+}
 
-function getAngularAcc1(gConst, m1, m2, theta1, theta2, d_theta1, d_theta2) {
-	var term1 = -gConst*(2*m1+m2)*Math.sin(theta1);
-	var term2 = -m2*gConst*Math.sin(theta1-(2*theta2));
-	var term3 = -2*Math.sin(theta1-theta2)*m2*(Math.pow(d_theta2,2)*r2+Math.pow(d_theta1,2)*Math.cos(theta1-theta2));
-	var term4 = r1*(2*m1+m2-m2*Math.cos(2*theta1-2*theta2));
-	console.log((term1+term2+term3)/term4);
+function getAngularAcc1(gConst, m1, m2, ang1, ang2, ang_vel1, ang_vel2) {
+	var term1 = -gConst*(2*m1+m2)*Math.sin(ang1);
+	var term2 = -m2*gConst*Math.sin(ang1-(2*ang2));
+	var term3 = -2*Math.sin(ang1-ang2)*m2*(Math.pow(ang_vel2,2)*r2+Math.pow(ang_vel1,2)*Math.cos(ang1-ang2));
+	var term4 = r1*(2*m1+m2-m2*Math.cos(2*ang1-2*ang2));
 	return (term1+term2+term3)/term4;
 }
-function getAngularAcc2(gConst, m1, m2, theta1, theta2, d_theta1, d_theta2) {
-	var term1 = 2*Math.sin(theta1-theta2);
-	var term2 = Math.pow(d_theta1,2)*r1*(m1+m2);
-	var term3 = gConst*(m1+m2)*Math.cos(theta1);
-	var term4 = Math.pow(d_theta2,2)*r2*m2*Math.cos(theta1-theta2);
-	var term5 = r2*(2*m1+m2-m2*Math.cos(2*theta1-2*theta2));
+function getAngularAcc2(gConst, m1, m2, ang1, ang2, ang_vel1, ang_vel2) {
+	var term1 = 2*Math.sin(ang1-ang2);
+	var term2 = Math.pow(ang_vel1,2)*r1*(m1+m2);
+	var term3 = gConst*(m1+m2)*Math.cos(ang1);
+	var term4 = Math.pow(ang_vel2,2)*r2*m2*Math.cos(ang1-ang2);
+	var term5 = r2*(2*m1+m2-m2*Math.cos(2*ang1-2*ang2));
 	return term1*(term2+term3+term4)/term5;
 }
