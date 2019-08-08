@@ -6,13 +6,20 @@
 	<title>Double Pendulum Simulation</title>
 	<style type="text/css">
 		body {
-			background-color: pink;
+			/*background: url(vaporwave_bckgrnd.jpg);*/
+			background-size: /*contain*/;
+			background-position: center;
+			background-color: pink
 		}
 		h1 {
-			color: #94D0FF;
+			color: orange;
 		}
 		input {
 			margin-top: 10px;
+		}
+		.inputs {
+			background-color: orange;
+			padding: 10px;
 		}
 
 	</style>
@@ -21,30 +28,32 @@
 		<h1>Double Pendulum Simulation</h1>
 		<div id="double_pendulum"></div>
 		<input type="button" id="simulate" value="Start">
+		<div class='inputs'>
+			
+			<label for="L1">Rod 1</label>
+			<input id="l1" type="number" name="L1" value="100">
+			<br>
+			<label for="L2">Rod 2</label>
+			<input id="l2" type="number" name="L2" value="100">
+			<br>
+			<label for="mass1">Mass1</label>
+			<input id="mass1" type="number" name="mass1" value="10">
+			<br>
+			<label for="mass2">Mass2</label>
+			<input id="mass2" type="number" name="mass2" value="10">
+			<br>
+			<label for="Initial_theta1">Initial θ1</label>
+			<input id="initial_theta1" type="number" name="Initial_theta1" value="1">
+			<br>
+			<label for="Initial_theta2">Initial θ2</label>
+			<input id="initial_theta2" type="number" name="Initial_theta2" value="1">
+			<br>
+			<label for="grav">Gravitational Constant</label>
+			<input id="grav" type="number" name="grav" value="1">
+
+		</div>
 		<script src="double_pendulum.js"></script>
-
 		<br>
-		<label for="L1">Rod 1</label>
-		<input type="number" name="L1" value="10">
-		<br>
-		<label for="L2">Rod 2</label>
-		<input type="number" name="L2" value="10">
-		<br>
-		<label for="mass1">Mass1</label>
-		<input type="number" name="mass1" value="10">
-		<br>
-		<label for="mass2">Mass2</label>
-		<input type="number" name="mass2" value="10">
-		<br>
-		<label for="Initial_theta1">Initial θ1</label>
-		<input type="number" name="Initial_theta1" value="10">
-		<br>
-		<label for="Initial_theta2">Initial θ2</label>
-		<input type="number" name="Initial_theta2" value="10">
-		<br>
-		<label for="grav">Gravitational Constant</label>
-		<input type="number" name="grav" value="9.8">
-
 
 	</body>
 </html>

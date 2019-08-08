@@ -5,16 +5,16 @@
 	*/
 var simulationOn = false;
 // CONSTANTS
-var m1 = 100; // mass1
-var m2 = 100;	// mass2
-var timeStep = 1;
-var g = 9.8; // gravitational constant
+var m1 = parseFloat(document.getElementById('mass1').value); // mass1
+var m2 = parseFloat(document.getElementById('mass2').value);	// mass2
+var timestep = 60;
+var g = parseFloat(document.getElementById('grav').value) // gravitational constant
 
 // POSITIONS
-var r1 = 50;	// length of the pendulum
-var r2 = 150;	// length of the pendulum
-var theta1 = 0; // initial angular pos (in rads) of the pendulum relative to lower vertical 
-var theta2 = Math.PI-.00001;
+var r1 = parseFloat(document.getElementById('l1').value);	// length of the pendulum
+var r2 = parseFloat(document.getElementById('l2').value);	// length of the pendulum
+var theta1 = parseFloat(document.getElementById('initial_theta1').value); // initial angular pos (in rads) of the pendulum relative to lower vertical 
+var theta2 = parseFloat(document.getElementById('initial_theta2').value);
 var x1 = r1*Math.sin(theta1);
 var y1 = r1*Math.cos(theta1);
 var x2 = x1 + r2*Math.sin(theta2);
@@ -139,7 +139,7 @@ function startSimulation(){
     simulate.addEventListener("click", stopSimulation);
     interval = setInterval(function() {
     	step();
-    }, 75);
+    }, 1000/timestep);
     simulate.value = "Stop";
 }
 
