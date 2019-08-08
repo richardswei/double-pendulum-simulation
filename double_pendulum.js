@@ -112,17 +112,6 @@ function renderLines(circlesData) {
 	    svg.exit().remove();    
 }
 
-
-var startSimulation = setInterval(function(){
-		step();
-	}, 75);
-function startSimulation() {
-		startSimulation;
-}
-function stopSimulation() {
-		clearInterval(startSimulation);
-}
-
 function getAngularAcc1(gConst, m1, m2, ang1, ang2, ang_vel1, ang_vel2) {
 	var term1 = -gConst*(2*m1+m2)*Math.sin(ang1);
 	var term2 = -m2*gConst*Math.sin(ang1-(2*ang2));
@@ -137,4 +126,27 @@ function getAngularAcc2(gConst, m1, m2, ang1, ang2, ang_vel1, ang_vel2) {
 	var term4 = Math.pow(ang_vel2,2)*r2*m2*Math.cos(ang1-ang2);
 	var term5 = r2*(2*m1+m2-m2*Math.cos(2*ang1-2*ang2));
 	return term1*(term2+term3+term4)/term5;
+}
+
+var simulate = document.getElementById('simulate');
+    simulate.addEventListener("click", startSimulation);
+
+var interval;
+
+function startSimulation(){
+    console.log("Started Simulation");
+    simulate.removeEventListener("click", startSimulation);
+    simulate.addEventListener("click", stopSimulation);
+    interval = setInterval(function() {
+    	step();
+    }, 75);
+    simulate.value = "Stop";
+}
+
+function stopSimulation(){
+    console.log("Stopped Simulation");
+    simulate.removeEventListener("click", stopSimulation);
+    clearInterval(interval);
+    simulate.addEventListener("click", startSimulation);
+    simulate.value = "Start";
 }
