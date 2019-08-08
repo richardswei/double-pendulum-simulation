@@ -11,15 +11,15 @@ var timeStep = 100;
 var g = 9.8/timeStep; // gravitational constant
 
 // POSITIONS
-var r1 = 100;	// length of the pendulum
-var r2 = 100;	// length of the pendulum
+var r1 = 50;	// length of the pendulum
+var r2 = 200;	// length of the pendulum
 var theta1 = 0; // initial angular pos (in rads) of the pendulum relative to lower vertical 
-var theta2 = Math.PI/2;
+var theta2 = Math.PI-.00001;
 var x1 = r1*Math.sin(theta1);
 var y1 = r1*Math.cos(theta1);
 var x2 = x1 + r2*Math.sin(theta2);
 var y2 = y1 + r2*Math.cos(theta2);
-
+var svgWidth = 600;
 // VELOCITIES
 var d_theta1 = 0;
 var d_theta2 = 0;
@@ -30,20 +30,21 @@ var dd_theta2 = 0;
 
 // DRAW
 var svgContainer = d3.select("#double_pendulum").append("svg")
-	.attr("width", 500)
-	.attr("height", 500);
+	.attr("width", svgWidth)
+	.attr("height", svgWidth);
 
 var jsonCircles = [
-  { "x_axis": x1, "y_axis": y1, "radius": 10, "color": "purple", "theta":theta1 }, //mass1
-  { "x_axis": x2, "y_axis": y2, "radius": 10, "color": "purple", "theta":theta2 }		//mass2
+  { "x_axis": x1, "y_axis": y1, "radius": 15, "color": "#8795E8", "theta":theta1 }, //mass1
+  { "x_axis": x2, "y_axis": y2, "radius": 15, "color": "#8795E8", "theta":theta2 }		//mass2
 ];
 var circles = svgContainer.selectAll("circle")
 	.data(jsonCircles)
 	.enter()
 	.append("circle");
+
 var circleAttributes = circles
-	.attr("cx", function (d) { return d.x_axis + 250; })
-	.attr("cy", function (d) { return d.y_axis + 250; })
+	.attr("cx", function (d) { return d.x_axis + svgWidth/2; })
+	.attr("cy", function (d) { return d.y_axis + svgWidth/2; })
 	.attr("r", function (d) { return d.radius; })
 	.style("fill", function(d) { return d.color; });
 
@@ -54,9 +55,9 @@ var doTheLine = d3.line()
 	.curve(d3.curveLinear)
 ;
 var lineData = [
-	{"x_axis": 250, "y_axis":250},
-	{"x_axis": x1+250, "y_axis": y1+250},
-	{"x_axis": x2+250, "y_axis": y2+250}
+	{"x_axis": svgWidth/2, "y_axis":svgWidth/2},
+	{"x_axis": x1+svgWidth/2, "y_axis": y1+svgWidth/2},
+	{"x_axis": x2+svgWidth/2, "y_axis": y2+svgWidth/2}
 ];
 var lines = svgContainer.append("path")
 	.datum(lineData)
@@ -64,7 +65,7 @@ var lines = svgContainer.append("path")
 	.attr('class', 'line')
 	.attr('fill', 'none')
 	.attr('stroke-width', 2)
-	.attr('stroke', 'purple'); 
+	.attr('stroke', '#8795E8'); 
 
 // NEXT STEPS
 function step() {
@@ -74,9 +75,6 @@ function step() {
 	d_theta1 += getAngularAcc1(g, m1, m2, circlesData[0].theta, circlesData[1].theta, prev_d_theta1, prev_d_theta2);
 	d_theta2 += getAngularAcc2(g, m1, m2, circlesData[0].theta, circlesData[1].theta, prev_d_theta1, prev_d_theta2);
 	
-	console.log('d_theta1 : '+d_theta1);
-	console.log('prev_d_theta1 : '+prev_d_theta1);
-
 	circlesData[0].theta += d_theta1;
 	circlesData[1].theta += d_theta2;
 
@@ -90,15 +88,15 @@ function step() {
 
 	renderLines(circlesData);
 	d3.selectAll("circle")
-		.attr("cx", function (d) { return d.x_axis + 250; })
-		.attr("cy", function (d) { return d.y_axis + 250; })
+		.attr("cx", function (d) { return d.x_axis + svgWidth/2; })
+		.attr("cy", function (d) { return d.y_axis + svgWidth/2; })
 }
 
 // RENDER LINES
 function renderLines(circlesData) {
-	var lineData = [{"x_axis": 250, "y_axis":250},
-	{"x_axis": circlesData[0].x_axis+250, "y_axis": circlesData[0].y_axis+250},
-	{"x_axis": circlesData[1].x_axis+250, "y_axis": circlesData[1].y_axis+250}
+	var lineData = [{"x_axis": svgWidth/2, "y_axis":svgWidth/2},
+	{"x_axis": circlesData[0].x_axis+svgWidth/2, "y_axis": circlesData[0].y_axis+svgWidth/2},
+	{"x_axis": circlesData[1].x_axis+svgWidth/2, "y_axis": circlesData[1].y_axis+svgWidth/2}
 	];
 
 	var svg = d3.selectAll('path')
@@ -106,26 +104,23 @@ function renderLines(circlesData) {
 	    svg.enter().append('svg:path')
 	            .attr('d', doTheLine(lineData))
 	            .style('stroke-width', 2)
-	            .style('stroke', 'purple');
+	            .style('stroke', '#8795E8');
 	    svg
 	    	.attr('d', doTheLine(lineData))
             .style('stroke-width', 2)
-            .style('stroke', 'purple');    
+            .style('stroke', '#8795E8');    
 	    svg.exit().remove();    
 }
+
 
 var startSimulation = setInterval(function(){
 		step();
 	}, 1000/timeStep);
-
-function toggleSimulation() {
-	if (simulationOn) {
-		clearInterval(startSimulation);
-		simulationOn = false;
-	} else {
+function startSimulation() {
 		startSimulation;
-		simulationOn=true;
-	}
+}
+function stopSimulation() {
+		clearInterval(startSimulation);
 }
 
 function getAngularAcc1(gConst, m1, m2, ang1, ang2, ang_vel1, ang_vel2) {

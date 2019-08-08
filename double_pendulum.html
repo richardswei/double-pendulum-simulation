@@ -3,11 +3,50 @@
 <head>
 	<meta charset="utf-8">
 	<script src="https://d3js.org/d3.v5.min.js"></script>
-	<title></title>
+	<title>Double Pendulum Simulation</title>
+	<style type="text/css">
+		body {
+			background-color: pink;
+		}
+		h1 {
+			color: #94D0FF;
+			border: 2px white;
+		}
+		input {
+			margin-top: 10px;
+		}
+
+	</style>
 </head>
-<body>
-	<div id="double_pendulum"></div>
-	<script src="double_pendulum.js"></script>
-	<button onclick="toggleSimulation()">SHIT</button>
-</body>
+	<body>
+		<h1>Double Pendulum Simulation</h1>
+		<div id="double_pendulum"></div>
+		<script src="double_pendulum.js"></script>
+		<button onclick="startSimulation()">SHIT</button>
+		<button onclick="stopSimulation()">STOP</button>
+
+		<br>
+		<label for="L1">L1</label>
+		<input type="number" name="L1" value="10">
+		<br>
+		<label for="L2">L2</label>
+		<input type="number" name="L2" value="10">
+		<br>
+		<label for="mass1">mass1</label>
+		<input type="number" name="mass1" value="10">
+		<br>
+		<label for="mass2">mass2</label>
+		<input type="number" name="mass2" value="10">
+		<br>
+		<label for="Initial_theta1">Initial θ1</label>
+		<input type="number" name="Initial_theta1" value="10">
+		<br>
+		<label for="Initial_theta2">Initial θ2</label>
+		<input type="number" name="Initial_theta2" value="10">
+		<br>
+		<label for="grav">gravitational constant</label>
+		<input type="number" name="grav" value="10">
+
+
+	</body>
 </html>
