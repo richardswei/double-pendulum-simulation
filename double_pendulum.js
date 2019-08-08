@@ -7,12 +7,12 @@ var simulationOn = false;
 // CONSTANTS
 var m1 = 100; // mass1
 var m2 = 100;	// mass2
-var timeStep = 100;
-var g = 9.8/timeStep; // gravitational constant
+var timeStep = 1;
+var g = 9.8; // gravitational constant
 
 // POSITIONS
 var r1 = 50;	// length of the pendulum
-var r2 = 200;	// length of the pendulum
+var r2 = 150;	// length of the pendulum
 var theta1 = 0; // initial angular pos (in rads) of the pendulum relative to lower vertical 
 var theta2 = Math.PI-.00001;
 var x1 = r1*Math.sin(theta1);
@@ -115,7 +115,7 @@ function renderLines(circlesData) {
 
 var startSimulation = setInterval(function(){
 		step();
-	}, 1000/timeStep);
+	}, 75);
 function startSimulation() {
 		startSimulation;
 }
